@@ -1,4 +1,5 @@
 import { GoogleMap, useLoadScript } from "@react-google-maps/api";
+import mapStyles from "./utils/MapStyles";
 
 const App = () => {
   const libraries = ["places"];
@@ -17,6 +18,12 @@ const App = () => {
     libraries,
   });
 
+  const options = {
+    styles: mapStyles,
+    disableDefaultUI: true,
+    zoomControl: true,
+  };
+
   if (loadError) return "Error loading map";
   if (!isLoaded) return "Loading the map";
 
@@ -26,6 +33,7 @@ const App = () => {
         mapContainerStyle={mapContainerStyle}
         zoom={8}
         center={center}
+        options={options}
       ></GoogleMap>
     </div>
   );
