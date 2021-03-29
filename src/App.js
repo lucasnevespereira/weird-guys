@@ -1,5 +1,6 @@
 import { GoogleMap, useLoadScript } from "@react-google-maps/api";
 import mapStyles from "./utils/MapStyles";
+import logo from "./assets/logo.png";
 
 const App = () => {
   const libraries = ["places"];
@@ -29,6 +30,9 @@ const App = () => {
 
   return (
     <div>
+      <div className="logo">
+        <img src={logo} alt="logo" />
+      </div>
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
         zoom={8}
