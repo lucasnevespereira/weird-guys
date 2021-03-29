@@ -52,6 +52,11 @@ const App = () => {
     mapRef.current = map;
   }, []);
 
+  const moveMapTo = React.useCallback(({ lat, lng }) => {
+    mapRef.current.panTo({ lat, lng });
+    mapRef.current.setZoom(14);
+  }, []);
+
   if (loadError) return "Error loading map";
   if (!isLoaded) return "Loading the map";
 
@@ -59,11 +64,11 @@ const App = () => {
     <div>
       <div className="logo">
         <img src={logo} alt="logo" />
-        <Search />
+        <Search moveTo={moveMapTo} />
       </div>
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
-        zoom={12}
+        zoom={10}
         center={center}
         options={options}
         onClick={onMapClick}
