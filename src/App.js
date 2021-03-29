@@ -19,8 +19,8 @@ const App = () => {
   };
 
   const center = {
-    lat: 48.9333,
-    lng: 2.05,
+    lat: 48.8534,
+    lng: 2.3488,
   };
 
   const { isLoaded, loadError } = useLoadScript({
@@ -70,7 +70,7 @@ const App = () => {
       <Locate moveTo={moveMapTo} />
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
-        zoom={10}
+        zoom={12}
         center={center}
         options={options}
         onClick={onMapClick}
