@@ -4,7 +4,6 @@ import mapStyles from "./utils/MapStyles";
 import logo from "./assets/logo.png";
 
 const App = () => {
-  const libraries = ["places"];
   const mapContainerStyle = {
     width: "100vw",
     height: "100vh",
@@ -17,7 +16,7 @@ const App = () => {
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-    libraries,
+    libraries: ["places"],
   });
 
   const options = {
@@ -58,6 +57,12 @@ const App = () => {
             position={{
               lat: marker.lat,
               lng: marker.lng,
+            }}
+            icon={{
+              url: "/burglar.svg",
+              scaledSize: new window.google.maps.Size(30, 30),
+              origin: new window.google.maps.Point(0, 0),
+              anchor: new window.google.maps.Point(15, 15),
             }}
           />
         ))}
