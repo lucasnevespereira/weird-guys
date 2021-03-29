@@ -1,4 +1,5 @@
 import React from "react";
+import Search from "./components/Search";
 import { formatRelative } from "date-fns";
 import {
   GoogleMap,
@@ -6,6 +7,7 @@ import {
   Marker,
   InfoWindow,
 } from "@react-google-maps/api";
+import "@reach/combobox/styles.css";
 import mapStyles from "./utils/MapStyles";
 import logo from "./assets/logo.png";
 
@@ -16,8 +18,8 @@ const App = () => {
   };
 
   const center = {
-    lat: 43.653225,
-    lng: -79.383186,
+    lat: 48.9333,
+    lng: 2.05,
   };
 
   const { isLoaded, loadError } = useLoadScript({
@@ -57,10 +59,11 @@ const App = () => {
     <div>
       <div className="logo">
         <img src={logo} alt="logo" />
+        <Search />
       </div>
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
-        zoom={8}
+        zoom={12}
         center={center}
         options={options}
         onClick={onMapClick}
