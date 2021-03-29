@@ -12,11 +12,16 @@ import "@reach/combobox/styles.css";
 import mapStyles from "./utils/MapStyles";
 import logo from "./assets/logo.png";
 
+import { db } from "./services/firebase";
+import { findByTitle } from "@testing-library/dom";
+
 const App = () => {
   const mapContainerStyle = {
     width: "100vw",
     height: "100vh",
   };
+
+  const libraries = ["places"];
 
   const center = {
     lat: 48.8534,
@@ -25,7 +30,7 @@ const App = () => {
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-    libraries: ["places"],
+    libraries,
   });
 
   const options = {
@@ -37,15 +42,39 @@ const App = () => {
   const [markers, setMarkers] = React.useState([]);
   const [selected, setSelected] = React.useState(null);
 
+  const udpateData = () => {
+    db.collection("reports")
+      .get()
+      .then((snapshot) => {
+        const fetchedData = [];
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          fetchedData.push(data);
+        });
+        setMarkers(fetchedData);
+      })
+      .catch((error) => console.log(error));
+  };
+
   const onMapClick = React.useCallback((event) => {
-    setMarkers((current) => [
-      ...current,
-      {
+    db.collection("reports")
+      .add({
         lat: event.latLng.lat(),
         lng: event.latLng.lng(),
-        time: new Date(),
-      },
-    ]);
+        time: new Date().toISOString(),
+      })
+      .then((doc) => {
+        console.log("Report added with ID: ", doc.id);
+        doc.update({ id: doc.id });
+        udpateData();
+      })
+      .catch((error) => {
+        console.error("Error adding report: ", error);
+      });
+  }, []);
+
+  React.useEffect(() => {
+    udpateData();
   }, []);
 
   const mapRef = React.useRef();
@@ -57,6 +86,12 @@ const App = () => {
     mapRef.current.panTo({ lat, lng });
     mapRef.current.setZoom(14);
   }, []);
+
+  const onCancelMarker = (markerId) => {
+    db.collection("reports").doc(markerId).delete();
+    console.log("Deleted report with id: ", markerId);
+    udpateData();
+  };
 
   if (loadError) return "Error loading map";
   if (!isLoaded) return "Loading the map";
@@ -78,7 +113,7 @@ const App = () => {
       >
         {markers.map((marker) => (
           <Marker
-            key={marker.time.toISOString()}
+            key={marker.id}
             position={{
               lat: marker.lat,
               lng: marker.lng,
@@ -107,7 +142,13 @@ const App = () => {
           >
             <div>
               <h2>Weird guy here!</h2>
-              <p>Reported {formatRelative(selected.time, new Date())}</p>
+              <p>
+                Reported {formatRelative(new Date(selected.time), new Date())}
+              </p>
+
+              <button className="cancel" onClick={onCancelMarker(selected.id)}>
+                Cancel report
+              </button>
             </div>
           </InfoWindow>
         ) : null}

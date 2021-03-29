@@ -55,3 +55,7 @@ code {
   width: 40px;
   cursor: pointer;
 }
+
+.cancel {
+  cursor: pointer;
+}
