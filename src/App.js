@@ -87,12 +87,6 @@ const App = () => {
     mapRef.current.setZoom(14);
   }, []);
 
-  const onCancelMarker = (markerId) => {
-    db.collection("reports").doc(markerId).delete();
-    console.log("Deleted report with id: ", markerId);
-    udpateData();
-  };
-
   if (loadError) return "Error loading map";
   if (!isLoaded) return "Loading the map";
 
@@ -146,7 +140,14 @@ const App = () => {
                 Reported {formatRelative(new Date(selected.time), new Date())}
               </p>
 
-              <button className="cancel" onClick={onCancelMarker(selected.id)}>
+              <button
+                className="cancel"
+                onClick={() => {
+                  db.collection("reports").doc(selected.id).delete();
+                  console.log("Deleted report with id: ", selected.id);
+                  udpateData();
+                }}
+              >
                 Cancel report
               </button>
             </div>
