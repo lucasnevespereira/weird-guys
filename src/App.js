@@ -1,4 +1,5 @@
-import { GoogleMap, useLoadScript } from "@react-google-maps/api";
+import React from "react";
+import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 import mapStyles from "./utils/MapStyles";
 import logo from "./assets/logo.png";
 
@@ -25,6 +26,8 @@ const App = () => {
     zoomControl: true,
   };
 
+  const [markers, setMarkers] = React.useState([]);
+
   if (loadError) return "Error loading map";
   if (!isLoaded) return "Loading the map";
 
@@ -38,7 +41,27 @@ const App = () => {
         zoom={8}
         center={center}
         options={options}
-      ></GoogleMap>
+        onClick={(event) => {
+          setMarkers((current) => [
+            ...current,
+            {
+              lat: event.latLng.lat(),
+              lng: event.latLng.lng(),
+              time: new Date(),
+            },
+          ]);
+        }}
+      >
+        {markers.map((marker) => (
+          <Marker
+            key={marker.time.toISOString()}
+            position={{
+              lat: marker.lat,
+              lng: marker.lng,
+            }}
+          />
+        ))}
+      </GoogleMap>
     </div>
   );
 };
