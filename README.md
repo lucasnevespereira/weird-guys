@@ -1,6 +1,8 @@
-# weird-guys
+<img src="src/assets/logo.png" alt="logo" width="320" />
 
-React application where users can report weird guys they have seen into a Map.
+<p>React application where users can report weird guys they have seen into a Map.</p>
+
+![](src/assets/demo.gif)
 
 ### Google Maps Styles Generator
 
