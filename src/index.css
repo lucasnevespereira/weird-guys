@@ -41,3 +41,17 @@ code {
   font-size: 1.2rem;
   width: 100%;
 }
+
+.location {
+  position: absolute;
+  top: 2rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  z-index: 10;
+}
+
+.location img {
+  width: 40px;
+  cursor: pointer;
+}

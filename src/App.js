@@ -1,5 +1,6 @@
 import React from "react";
 import Search from "./components/Search";
+import Locate from "./components/Locate";
 import { formatRelative } from "date-fns";
 import {
   GoogleMap,
@@ -66,6 +67,7 @@ const App = () => {
         <img src={logo} alt="logo" />
         <Search moveTo={moveMapTo} />
       </div>
+      <Locate moveTo={moveMapTo} />
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
         zoom={10}
