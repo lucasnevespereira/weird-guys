@@ -1,5 +1,11 @@
 import React from "react";
-import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
+import { formatRelative } from "date-fns";
+import {
+  GoogleMap,
+  useLoadScript,
+  Marker,
+  InfoWindow,
+} from "@react-google-maps/api";
 import mapStyles from "./utils/MapStyles";
 import logo from "./assets/logo.png";
 
@@ -26,6 +32,23 @@ const App = () => {
   };
 
   const [markers, setMarkers] = React.useState([]);
+  const [selected, setSelected] = React.useState(null);
+
+  const onMapClick = React.useCallback((event) => {
+    setMarkers((current) => [
+      ...current,
+      {
+        lat: event.latLng.lat(),
+        lng: event.latLng.lng(),
+        time: new Date(),
+      },
+    ]);
+  }, []);
+
+  const mapRef = React.useRef();
+  const onMapLoad = React.useCallback((map) => {
+    mapRef.current = map;
+  }, []);
 
   if (loadError) return "Error loading map";
   if (!isLoaded) return "Loading the map";
@@ -40,16 +63,8 @@ const App = () => {
         zoom={8}
         center={center}
         options={options}
-        onClick={(event) => {
-          setMarkers((current) => [
-            ...current,
-            {
-              lat: event.latLng.lat(),
-              lng: event.latLng.lng(),
-              time: new Date(),
-            },
-          ]);
-        }}
+        onClick={onMapClick}
+        onLoad={onMapLoad}
       >
         {markers.map((marker) => (
           <Marker
@@ -64,8 +79,28 @@ const App = () => {
               origin: new window.google.maps.Point(0, 0),
               anchor: new window.google.maps.Point(15, 15),
             }}
+            onClick={() => {
+              setSelected(marker);
+            }}
           />
         ))}
+
+        {selected ? (
+          <InfoWindow
+            position={{
+              lat: selected.lat,
+              lng: selected.lng,
+            }}
+            onCloseClick={() => {
+              setSelected(null);
+            }}
+          >
+            <div>
+              <h2>Weird guy here!</h2>
+              <p>Reported {formatRelative(selected.time, new Date())}</p>
+            </div>
+          </InfoWindow>
+        ) : null}
       </GoogleMap>
     </div>
   );
